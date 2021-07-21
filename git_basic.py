@@ -3,7 +3,8 @@ from github import Github
 
 access_token = "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"
 g = Github(access_token)
-user = g.get_user()
+
+
 # print(user.name)
 # print(user.login)
 # print(user)

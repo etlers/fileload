@@ -1,12 +1,13 @@
 from github import Github
 
-access_token = "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"
+access_token = "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"
 g = Github(access_token)
 user = g.get_user()
-
+# 레포지토리 연결 확인
 repo = g.get_repo("etlers/fileload")
-
+# 레포지토리 컨텐츠 목록
 contents = repo.get_contents("")
+# 이후 파일 존재여부를 판단하기 위한 파일 목록 저장. update or create
 all_files = []
 while contents:
     file_content = contents.pop(0)
@@ -15,18 +16,26 @@ while contents:
     else:
         file = file_content
         all_files.append(str(file).replace('ContentFile(path="','').replace('")',''))
-print(all_files)
 
-with open('csv_file.csv', 'r') as file:
-    content = file.read()
-print(content)
-# Upload to github. if folder not exists then create
-git_prefix = 'fld_test/'
-git_file = git_prefix + 'csv_file.csv'
-if git_file in all_files:
-    contents = repo.get_contents(git_file)
-    repo.update_file(contents.path, "committing files", content, contents.sha, branch="main")
-    print(git_file + ' UPDATED')
-else:
-    repo.create_file(git_file, "committing files", content, branch="main")
-    print(git_file + ' CREATED')
+def upload_file(upload_file):
+    # 업로드할 파일을 읽어들임
+    with open(upload_file, 'r') as file:
+        content = file.read()
+
+    # 지정한 파일을 지정한 경로로 업로드
+    git_prefix = 'monitoring/'
+    git_file = git_prefix + upload_file
+    if git_file in all_files:
+        contents = repo.get_contents(git_file)
+        repo.update_file(contents.path, "committing files", content, contents.sha, branch="main")
+        print(git_file + ' UPDATED')
+    else:
+        repo.create_file(git_file, "committing files", content, branch="main")
+        print(git_file + ' CREATED')
+
+
+list_file = [
+    "file_20210719.csv","file_20210720.csv","file_20210721.csv",
+]
+for file_name in list_file:
+    upload_file(file_name)
