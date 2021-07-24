@@ -18,7 +18,7 @@ def git_push_automation():
 
 
 def git_push_checkout():
-    cmd.check_output('git add .', shell=True)
+    cmd.check_output(f'git add .', shell=True)
     cmd.check_output('git commit -m "a commit"', shell=True)
     cmd.check_output("git push -u origin main -f", shell=True)
 
